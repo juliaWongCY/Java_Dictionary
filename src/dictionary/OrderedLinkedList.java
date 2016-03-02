@@ -11,30 +11,71 @@ import java.util.NoSuchElementException;
 public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
         Dictionary<K, V> {
 
-  private K keys;
-  private V values;
+  private OrderedLinkedListEntry<K, V> head;
+  private int numElems;
 
-  public OrderedLinkedList(K keys, V values){
+  public OrderedLinkedList(OrderedLinkedListEntry<K, V> head){
+    this.head = head;
   }
 
   @Override
   public int size() {
-    return 0;
+    return numElems;
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return (numElems == 0);
   }
 
   @Override
   public V get(K key) throws NoSuchElementException {
+    OrderedLinkedListEntry<K, V> next = head.getNext();
+    if(head == null){
+      throw new NoSuchElementException(
+          "the given key has no associated value");
+    } else if (head.getKey() == key){
+      return head.getValue();
+    } else {
+      while(next != null && next.getKey().compareTo(key) < 0){
+        head = next;
+        next = next.getNext();
+      }
+      if(next != null && next.getKey().equals(key)){
+        return next.getValue();
+      }
+    }
     return null;
   }
 
   @Override
   public void put(K key, V value) {
+    OrderedLinkedListEntry<K, V> previous = findPrev(key);
+      if(previous == null){
+        //this.head = previous; //TODO: Check
+        this.put(key, value);
+    } else if(previous.getKey() == key){
+        previous.setValue(value);
+      } else if(previous.getKey().compareTo(key)< 0){
+        OrderedLinkedListEntry<K, V> afterPrev
+          = new OrderedLinkedListEntry<>(key, value);
+        this.put(key, value);//TODO
+      } else {
+        this.put(key, value);
+      }
+  }
 
+  private OrderedLinkedListEntry<K, V> findPrev(K searchKey){
+    OrderedLinkedListEntry<K, V> prev = head;
+    if( (prev != null) && (prev.getKey().compareTo(searchKey)<0)){
+      OrderedLinkedListEntry<K, V> curr = prev.getNext();
+
+      while((curr != null) && (curr.getKey().compareTo(searchKey)<= 0)){
+        prev = curr;
+        curr = curr.getNext();
+      }
+    }
+    return prev;
   }
 
   @Override
@@ -45,5 +86,10 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   @Override
   public void clear() {
 
+  }
+
+  @Override
+  public Iterator<DictionaryEntry<K, V>> iterator() {
+    return null;
   }
 }
