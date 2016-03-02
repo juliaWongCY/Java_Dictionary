@@ -10,5 +10,40 @@ import java.util.NoSuchElementException;
  */
 public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
         Dictionary<K, V> {
-    // TODO
+
+  private K keys;
+  private V values;
+
+  public OrderedLinkedList(K keys, V values){
+  }
+
+  @Override
+  public int size() {
+    return 0;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
+  }
+
+  @Override
+  public V get(K key) throws NoSuchElementException {
+    return null;
+  }
+
+  @Override
+  public void put(K key, V value) {
+
+  }
+
+  @Override
+  public void remove(K key) throws NoSuchElementException {
+
+  }
+
+  @Override
+  public void clear() {
+
+  }
 }
