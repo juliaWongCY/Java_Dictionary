@@ -14,8 +14,10 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   private OrderedLinkedListEntry<K, V> head;
   private int numElems;
 
-  public OrderedLinkedList(OrderedLinkedListEntry<K, V> head){
-    this.head = head;
+  public OrderedLinkedList(){
+    head = null;
+    numElems = 0;
+
   }
 
   @Override
@@ -51,17 +53,20 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   @Override
   public void put(K key, V value) {
     OrderedLinkedListEntry<K, V> previous = findPrev(key);
+    OrderedLinkedListEntry<K, V> newNode
+      = new OrderedLinkedListEntry<>(key, value);
       if(previous == null){
-        //this.head = previous; //TODO: Check
-        this.put(key, value);
+        head = newNode;
     } else if(previous.getKey() == key){
         previous.setValue(value);
       } else if(previous.getKey().compareTo(key)< 0){
-        OrderedLinkedListEntry<K, V> afterPrev
-          = new OrderedLinkedListEntry<>(key, value);
-        this.put(key, value);//TODO
+        newNode.setNext(previous.getNext());
+        previous.setNext(newNode);
+        numElems++;
       } else {
-        this.put(key, value);
+        newNode.setNext(head);
+        head = newNode;
+        numElems++;
       }
   }
 
@@ -80,6 +85,11 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
 
   @Override
   public void remove(K key) throws NoSuchElementException {
+    if(head == null){
+      throw new NoSuchElementException("There's no elements with matching key");
+    } else {
+
+    }
 
   }
 
