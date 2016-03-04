@@ -45,4 +45,8 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
   public void clear() {
 
   }
+  @Override
+  public Iterator<DictionaryEntry<K, V>> iterator() {
+    return null;
+  }
 }

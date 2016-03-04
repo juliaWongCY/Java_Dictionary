@@ -1,7 +1,7 @@
 package dictionary;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /*
@@ -33,13 +33,13 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
 
   @Override
   public V get(K key) throws NoSuchElementException {
-    OrderedLinkedListEntry<K, V> next = head.getNext();
     if(head == null){
       throw new NoSuchElementException(
           "the given key has no associated value");
     } else if (head.getKey() == key){
       return head.getValue();
     } else {
+      OrderedLinkedListEntry<K, V> next = head.getNext();
       while(next != null && next.getKey().compareTo(key) < 0){
         head = next;
         next = next.getNext();
@@ -55,9 +55,10 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   public void put(K key, V value) {
     OrderedLinkedListEntry<K, V> previous = findPrev(key);
     OrderedLinkedListEntry<K, V> newNode
-      = new OrderedLinkedListEntry<K, V>(key, value);
+      = new OrderedLinkedListEntry<>(key, value);
       if(previous == null){
         head = newNode;
+        numElems++;
     } else if(previous.getKey() == key){
         previous.setValue(value);
       } else if(previous.getKey().compareTo(key)< 0){
@@ -86,59 +87,114 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
 
   @Override
   public void remove(K key) throws NoSuchElementException {
-    //boolean hasMatch = false;
-    Iterator<DictionaryEntry<K, V>> iterators = iterator();
-    OrderedLinkedListEntry<K, V> node = (OrderedLinkedListEntry<K, V>) iterators.next();
-
-    if (head == null) {
-      throw new NoSuchElementException("There's no elements with matching key");
-
-    } else {
-      while (iterators.hasNext()) {
-        if (node.getKey() == key) {
-          if (node != head) {
-            findPrev(key).setNext(node.getNext());
-            node = null;
-          } else {
-            head = null;
-          }
+    NoSuchElementException noSuchElementException
+        = new NoSuchElementException("There is no elements with matching key.");
+    if(head != null){
+      if(head.getKey() == key){
+        head = head.getNext();
+        numElems --;
+      } else {
+        OrderedLinkedListEntry<K, V> node = head;
+        while(node.getNext() != null && node.getNext().getKey().compareTo(key) < 0){
+          node = node.getNext();
         }
-        numElems--;
+        if(node.getNext() != null && node.getNext().getKey() == key){
+          node.setNext(node.getNext().getNext());
+          numElems--;
+        } else {
+          throw noSuchElementException;
+        }
       }
+    } else {
+      throw noSuchElementException;
     }
   }
 
   @Override
   public void clear() {
-
+    head = null;
+    numElems = 0;
   }
 
+ @Override
+ public Iterator<DictionaryEntry<K, V>> iterator() {
+   return new ListIterator();
+ }
+
+ private class ListIterator implements Iterator<DictionaryEntry<K, V>>{
+   private int expectedNum = numElems;
+   private OrderedLinkedListEntry<K, V> current;
+
+   private ListIterator(){
+     current = head;
+   }
+
+   @Override
+   public boolean hasNext() {
+     return current != null;
+   }
+
+   @Override
+   public DictionaryEntry<K, V> next() {
+
+     if (!hasNext()) {
+       throw new NoSuchElementException("The list is empty");
+     } else if(expectedNum != numElems) {
+       throw new ConcurrentModificationException();
+     }
+       if (current == null) {
+         return head;
+       } else {
+         OrderedLinkedListEntry<K, V> result = current;
+         current = current.getNext();
+         return result;
+       }
+   }
+
+   @Override
+   public void remove() {
+     throw new UnsupportedOperationException();
+   }
+ }
+
+}
+
+
+
+// private int expectedNum = numElems;
+// private OrderedLinkedListEntry<K, V> current;
+/*
   @Override
   public Iterator<DictionaryEntry<K, V>> iterator() {
+    int expectedNum = numElems;
+    OrderedLinkedListEntry<K, V> current = head;
     return new Iterator<DictionaryEntry<K, V>>() {
-      @Override
-      public boolean hasNext() {
-        return !isEmpty();
-      }
+     @Override
+   public boolean hasNext() {
+     return current != null;
+   }
 
-      @Override
-      public DictionaryEntry<K, V> next() {
-        if (hasNext()) {
-          if (head.getNext() == null) {
-            return head;
-          } else {
-            return head.getNext();
-          }
-        } else {
-          throw new NoSuchElementException("The list is empty");
-          // TODO: ConcurrentModificationException
-        }
-      }
+   @Override
+   public DictionaryEntry<K, V> next() {
 
-      @Override
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
+     if (!hasNext()) {
+       throw new NoSuchElementException("The list is empty");
+     } else if(expectedNum != numElems) {
+       throw new ConcurrentModificationException();
+     }
+       if (current == null) {
+         return head;
+       } else {
+         OrderedLinkedListEntry<K, V> result = current;
+         current = current.getNext();
+         return result;
+       }
+   }
+
+   @Override
+   public void remove() {
+     throw new UnsupportedOperationException();
+   }
     };
   }
-}
+  */
