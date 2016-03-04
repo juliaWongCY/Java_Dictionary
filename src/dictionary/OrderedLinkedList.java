@@ -1,6 +1,7 @@
 package dictionary;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /*
@@ -54,7 +55,7 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   public void put(K key, V value) {
     OrderedLinkedListEntry<K, V> previous = findPrev(key);
     OrderedLinkedListEntry<K, V> newNode
-      = new OrderedLinkedListEntry<>(key, value);
+      = new OrderedLinkedListEntry<K, V>(key, value);
       if(previous == null){
         head = newNode;
     } else if(previous.getKey() == key){
@@ -85,12 +86,26 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
 
   @Override
   public void remove(K key) throws NoSuchElementException {
-    if(head == null){
+    //boolean hasMatch = false;
+    Iterator<DictionaryEntry<K, V>> iterators = iterator();
+    OrderedLinkedListEntry<K, V> node = (OrderedLinkedListEntry<K, V>) iterators.next();
+
+    if (head == null) {
       throw new NoSuchElementException("There's no elements with matching key");
+
     } else {
-
+      while (iterators.hasNext()) {
+        if (node.getKey() == key) {
+          if (node != head) {
+            findPrev(key).setNext(node.getNext());
+            node = null;
+          } else {
+            head = null;
+          }
+        }
+        numElems--;
+      }
     }
-
   }
 
   @Override
@@ -100,6 +115,30 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
 
   @Override
   public Iterator<DictionaryEntry<K, V>> iterator() {
-    return null;
+    return new Iterator<DictionaryEntry<K, V>>() {
+      @Override
+      public boolean hasNext() {
+        return !isEmpty();
+      }
+
+      @Override
+      public DictionaryEntry<K, V> next() {
+        if (hasNext()) {
+          if (head.getNext() == null) {
+            return head;
+          } else {
+            return head.getNext();
+          }
+        } else {
+          throw new NoSuchElementException("The list is empty");
+          // TODO: ConcurrentModificationException
+        }
+      }
+
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+    };
   }
 }
