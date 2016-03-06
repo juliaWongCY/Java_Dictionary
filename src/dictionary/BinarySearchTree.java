@@ -2,10 +2,7 @@ package dictionary;
 
 import com.sun.xml.internal.messaging.saaj.soap.impl.TreeException;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /*
  * Binary search tree based implementation of the Dictionary
@@ -70,7 +67,9 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
         return getElem(node.getRight(), searchKey);
       }
     }
-    else throw new NoSuchElementException("No such element: ");
+    else {
+      throw new NoSuchElementException("No such element: ");
+    }
   }
 
   @Override
@@ -82,9 +81,8 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
   private BinarySearchTreeEntry<K, V> putElem(BinarySearchTreeEntry<K, V> node, K key, V newValue){
     if(node == null){
       BinarySearchTreeEntry<K, V> newNode = new BinarySearchTreeEntry<>(key, newValue);
-      //newNode.setValue(newValue);
-      newNode.setLeft(null);
-      newNode.setRight(null);
+      node = newNode;
+
     } else {
       if (key == node.getKey()){
         node.setValue(newValue);
@@ -109,10 +107,10 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
 
   private BinarySearchTreeEntry<K, V> deleteElem(BinarySearchTreeEntry<K, V> node, K key){
     if(node == null){
-      throw new TreeException("There is no matching elements.");
+      throw new NoSuchElementException("There is no matching elements.");
     } else if(node.getKey() == key){
       node = deleteNode(node);
-    } else if(node.getKey().compareTo(key) < 0){
+    } else if(node.getKey().compareTo(key) > 0){
       node.setLeft(deleteElem(node.getLeft(), key));
     } else {
       node.setRight(deleteElem(node.getRight(), key));
@@ -127,8 +125,6 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
     } else if (node.getLeft() == null){
       return node.getRight();
     } else {
-      //K key = node.getKey();
-      //V value = node.getValue();
       BinarySearchTreeEntry<K, V> replacementNode;
       BinarySearchTreeEntry<K, V> newRight;
       replacementNode = findLeftMost(node.getRight());
@@ -147,36 +143,13 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
     }
   }
 
-  private BinarySearchTreeEntry<K, V> findRightMost (BinarySearchTreeEntry<K, V> node){
-    if(node.getRight() == null){
-      return node;
-    } else {
-      return findRightMost(node.getRight());
-    }
-  }
-
   private BinarySearchTreeEntry<K, V> deleteLeftMost(BinarySearchTreeEntry<K, V> node){
     if(node.getLeft() == null){
       return node.getRight();
     } else {
-      //K key = node.getKey();
-      //V value = node.getValue();
       BinarySearchTreeEntry<K, V> newChild;
-      // = new BinarySearchTreeEntry<>(key, value);
       newChild = deleteLeftMost(node.getLeft());
       node.setLeft(newChild);
-      return node;
-    }
-  }
-
-  private BinarySearchTreeEntry<K, V> deleteRightMost(BinarySearchTreeEntry<K, V> node){
-    if(node.getRight() == null){
-      return node.getLeft();
-    } else {
-      K key = node.getKey();
-      V value = node.getValue();
-      BinarySearchTreeEntry<K, V> newChild = new BinarySearchTreeEntry<>(key, value);
-      node.setRight(newChild);
       return node;
     }
   }
@@ -194,6 +167,9 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
   private class TreeIterator implements Iterator<DictionaryEntry<K, V>>{
     private int expectedNum = numNode;
     private BinarySearchTreeEntry<K, V> current;
+    //LinkedList<BinarySearchTreeEntry<K, V>> workList = new LinkedList<>();
+    Stack<BinarySearchTreeEntry<K, V>> workList = new Stack<>();
+
 
     private TreeIterator(){
       current = root;
@@ -201,16 +177,11 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
 
     @Override
     public boolean hasNext() {
-      return current != null;
+      return current != null || !workList.isEmpty();
     }
 
     @Override
     public DictionaryEntry<K, V> next() {
-      LinkedList<BinarySearchTreeEntry<K, V>> workList = new LinkedList<>();
-      K key = root.getKey();
-      V value = root.getValue();
-      BinarySearchTreeEntry<K, V> result = new BinarySearchTreeEntry<>(key, value);
-
 
       if (!hasNext()) {
         throw new NoSuchElementException("The list is empty");
@@ -224,16 +195,16 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements
         }
 
           if(!workList.isEmpty()) {
-            result = workList.pop();
+            current = workList.pop();
+            BinarySearchTreeEntry<K, V> result = current;
             current = result.getRight();
+            return result;
           }
-          return result;
-
-      //return root;
-      }
+          return root;
+     }
       public void remove () {
         throw new UnsupportedOperationException();
       }
-      }
+    }
 
 }
