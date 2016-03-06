@@ -14,16 +14,22 @@ import java.util.NoSuchElementException;
  */
 public class BinarySearchTree<K extends Comparable<? super K>, V> implements
         Dictionary<K, V> {
-    // TODO
+
+  private int numNode;
+
+  public BinarySearchTree() {
+
+    numNode = 0;
+  }
 
   @Override
   public int size() {
-    return 0;
+    return numNode;
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return numNode == 0;
   }
 
   @Override

@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
  * interface. The nodes of the list are ordered in ascending order by
  * the key-attribute of type K. Duplicate keys are not permitted.
  */
+
 public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
         Dictionary<K, V> {
 
