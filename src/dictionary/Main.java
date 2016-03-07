@@ -1,5 +1,6 @@
 package dictionary;
 
+import com.sun.xml.internal.messaging.saaj.soap.impl.TreeException;
 
 
 import java.io.*;
@@ -25,20 +26,32 @@ public class Main {
 
 
 
-      PrintWriter listFile = new PrintWriter("OrderedLinkedList.dat");
+//      PrintWriter listFile = new PrintWriter("OrderedLinkedList.dat");
+//
+//      PrintWriter treeFile = new PrintWriter("BinarySearchTree.dat");
 
-      PrintWriter treeFile = new PrintWriter("BinarySearchTree.dat");
+      File listFile = new File("OrderedLinkedList.dat");
+      File treeFile = new File("BinarySearchTree.dat");
 
+      PrintStream pS;
+
+      pS = new PrintStream(listFile);
 
       for (int i = 0; i < MAX_SIZE; i++) {
-        listFile.println(i + "\t" + listComplex[i]);
-        treeFile.println(i + "\t" + treeComplex[i]);
+        pS.println(i + "\t" + listComplex[i]);
+//        treeFile.println(i + "\t" + treeComplex[i]);
+      }
+      pS = new PrintStream(treeFile);
+      for (int i = 0; i < MAX_SIZE; i++) {
+        pS.println(i + "\t" + listComplex[i]);
+//        treeFile.println(i + "\t" + treeComplex[i]);
       }
 
-      listFile.flush();
-      treeFile.flush();
-      listFile.close();
-      treeFile.close();
+//
+//      listFile.flush();
+//      treeFile.flush();
+//      listFile.close();
+//      treeFile.close();
     }
 
 }

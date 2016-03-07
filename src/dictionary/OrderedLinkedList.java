@@ -89,7 +89,7 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   @Override
   public void remove(K key) throws NoSuchElementException {
     NoSuchElementException noSuchElementException
-        = new NoSuchElementException("There is no elements with matching key.");
+        = new NoSuchElementException("There is zno elements with matching key.");
     if(head != null){
       if(head.getKey() == key){
         head = head.getNext();
