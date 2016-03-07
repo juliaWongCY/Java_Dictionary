@@ -17,23 +17,22 @@ public class Main {
 
       InsertComplexities complexities = new InsertComplexities(random);
 
-      Dictionary<InsertComplexities.InstrumentedKey, Integer> list = new OrderedLinkedList<>();
-      int[] listComplex = complexities.getInsertComplexities(list, MAX_SIZE, REPITITIONS);
+      Dictionary<InsertComplexities.InstrumentedKey, Integer> list
+          = new OrderedLinkedList<>();
+      int[] listComplex = complexities.getInsertComplexities(list,
+                                           MAX_SIZE, REPITITIONS);
 
-      Dictionary<InsertComplexities.InstrumentedKey, Integer> tree = new BinarySearchTree<>();
-      int[] treeComplex = complexities.getInsertComplexities(tree, MAX_SIZE, REPITITIONS);
+      Dictionary<InsertComplexities.InstrumentedKey, Integer> tree
+          = new BinarySearchTree<>();
+      int[] treeComplex = complexities.getInsertComplexities(tree,
+                                           MAX_SIZE, REPITITIONS);
 
 
 
       PrintWriter listFile = new PrintWriter("OrderedLinkedList.dat");
-      //BufferedWriter listWriter = new BufferedWriter(listFile);
 
       PrintWriter treeFile = new PrintWriter("BinarySearchTree.dat");
-      //BufferedWriter treeWriter = new BufferedWriter(treeFile);
 
-      //File treeFile = new File("BinarySearchTree.dat");
-      //File listFile = new File(" OrderedLinkedList.dat");
-      //FileWriter treeWriter = new FileWriter("BinarySearchTree.dat");
 
       for (int i = 0; i < MAX_SIZE; i++) {
         listFile.println(i + "\t" + listComplex[i]);
@@ -42,6 +41,7 @@ public class Main {
 
       listFile.flush();
       treeFile.flush();
+
       listFile.close();
       treeFile.close();
     }
