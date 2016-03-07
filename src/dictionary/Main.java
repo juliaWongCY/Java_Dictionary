@@ -17,15 +17,11 @@ public class Main {
 
       InsertComplexities complexities = new InsertComplexities(random);
 
-      Dictionary<InsertComplexities.InstrumentedKey, Integer> list
-          = new OrderedLinkedList<>();
-      int[] listComplex = complexities.getInsertComplexities(list,
-                                           MAX_SIZE, REPITITIONS);
+      Dictionary<InsertComplexities.InstrumentedKey, Integer> list = new OrderedLinkedList<>();
+      int[] listComplex = complexities.getInsertComplexities(list, MAX_SIZE, REPITITIONS);
 
-      Dictionary<InsertComplexities.InstrumentedKey, Integer> tree
-          = new BinarySearchTree<>();
-      int[] treeComplex = complexities.getInsertComplexities(tree,
-                                           MAX_SIZE, REPITITIONS);
+      Dictionary<InsertComplexities.InstrumentedKey, Integer> tree = new BinarySearchTree<>();
+      int[] treeComplex = complexities.getInsertComplexities(tree, MAX_SIZE, REPITITIONS);
 
 
 
@@ -41,7 +37,6 @@ public class Main {
 
       listFile.flush();
       treeFile.flush();
-
       listFile.close();
       treeFile.close();
     }

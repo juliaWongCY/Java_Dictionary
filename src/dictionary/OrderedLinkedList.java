@@ -89,15 +89,14 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
   @Override
   public void remove(K key) throws NoSuchElementException {
     NoSuchElementException noSuchElementException
-        = new NoSuchElementException("There's no elements with matching key.");
+        = new NoSuchElementException("There is no elements with matching key.");
     if(head != null){
       if(head.getKey() == key){
         head = head.getNext();
         numElems --;
       } else {
         OrderedLinkedListEntry<K, V> node = head;
-        while(node.getNext() != null
-          && node.getNext().getKey().compareTo(key) < 0){
+        while(node.getNext() != null && node.getNext().getKey().compareTo(key) < 0){
           node = node.getNext();
         }
         if(node.getNext() != null && node.getNext().getKey() == key){
@@ -118,12 +117,12 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
     numElems = 0;
   }
 
-   @Override
-   public Iterator<DictionaryEntry<K, V>> iterator() {
+ @Override
+ public Iterator<DictionaryEntry<K, V>> iterator() {
    return new ListIterator();
  }
 
-   private class ListIterator implements Iterator<DictionaryEntry<K, V>>{
+ private class ListIterator implements Iterator<DictionaryEntry<K, V>>{
    private int expectedNum = numElems;
    private OrderedLinkedListEntry<K, V> current;
 
@@ -157,9 +156,46 @@ public class OrderedLinkedList<K extends Comparable<? super K>, V> implements
    public void remove() {
      throw new UnsupportedOperationException();
    }
-   }
+ }
 
 }
 
 
 
+// private int expectedNum = numElems;
+// private OrderedLinkedListEntry<K, V> current;
+/*
+  @Override
+  public Iterator<DictionaryEntry<K, V>> iterator() {
+    int expectedNum = numElems;
+    OrderedLinkedListEntry<K, V> current = head;
+    return new Iterator<DictionaryEntry<K, V>>() {
+     @Override
+   public boolean hasNext() {
+     return current != null;
+   }
+
+   @Override
+   public DictionaryEntry<K, V> next() {
+
+     if (!hasNext()) {
+       throw new NoSuchElementException("The list is empty");
+     } else if(expectedNum != numElems) {
+       throw new ConcurrentModificationException();
+     }
+       if (current == null) {
+         return head;
+       } else {
+         OrderedLinkedListEntry<K, V> result = current;
+         current = current.getNext();
+         return result;
+       }
+   }
+
+   @Override
+   public void remove() {
+     throw new UnsupportedOperationException();
+   }
+    };
+  }
+  */
