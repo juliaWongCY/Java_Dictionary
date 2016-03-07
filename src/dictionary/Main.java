@@ -1,6 +1,5 @@
 package dictionary;
 
-import com.sun.xml.internal.messaging.saaj.soap.impl.TreeException;
 
 
 import java.io.*;
